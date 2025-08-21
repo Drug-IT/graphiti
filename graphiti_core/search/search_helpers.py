@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import json
+
 from graphiti_core.edges import EntityEdge
-from graphiti_core.prompts.prompt_helpers import to_prompt_json
 from graphiti_core.search.search_config import SearchResults
 
 
@@ -24,9 +25,7 @@ def format_edge_date_range(edge: EntityEdge) -> str:
     return f'{edge.valid_at if edge.valid_at else "date unknown"} - {(edge.invalid_at if edge.invalid_at else "present")}'
 
 
-def search_results_to_context_string(
-    search_results: SearchResults, ensure_ascii: bool = False
-) -> str:
+def search_results_to_context_string(search_results: SearchResults) -> str:
     """Reformats a set of SearchResults into a single string to pass directly to an LLM as context"""
     fact_json = [
         {
@@ -58,16 +57,16 @@ def search_results_to_context_string(
     These are the most relevant facts and their valid and invalid dates. Facts are considered valid
     between their valid_at and invalid_at dates. Facts with an invalid_at date of "Present" are considered valid.
     <FACTS>
-            {to_prompt_json(fact_json, ensure_ascii=ensure_ascii, indent=12)}
+    {json.dumps(fact_json, indent=12)}
     </FACTS>
     <ENTITIES>
-            {to_prompt_json(entity_json, ensure_ascii=ensure_ascii, indent=12)}
+    {json.dumps(entity_json, indent=12)}
     </ENTITIES>
     <EPISODES>
-            {to_prompt_json(episode_json, ensure_ascii=ensure_ascii, indent=12)}
+    {json.dumps(episode_json, indent=12)}
     </EPISODES>
     <COMMUNITIES>
-            {to_prompt_json(community_json, ensure_ascii=ensure_ascii, indent=12)}
+    {json.dumps(community_json, indent=12)}
     </COMMUNITIES>
 """
 

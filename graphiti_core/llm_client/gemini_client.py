@@ -386,6 +386,7 @@ class GeminiClient(LLMClient):
                     max_tokens=max_tokens,
                     model_size=model_size,
                 )
+                
                 last_output = (
                     response.get('content')
                     if isinstance(response, dict) and 'content' in response
